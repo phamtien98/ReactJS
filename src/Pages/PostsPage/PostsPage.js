@@ -57,12 +57,7 @@ const PostsPage = () => {
     };
 
     const listSorted = GetPostSorted();
-    const [deleteItem,setDeleteItem]= useState([]);
-    const handleRemoveItem = (e)=> {
-        const id = e.target.getAttribute("id")
-       setDeleteItem( listSorted.filter(item => item.id !== id));
-        console.log('del:',deleteItem);
-    };
+
     return (
         <div>
             <input
@@ -81,11 +76,11 @@ const PostsPage = () => {
                 <tbody>
                     {listSorted.map(postz => (
                         <tr>
-                            <td>{postz.id}</td>
+                            <td key ={postz.id}>{postz.id}</td>
                             <td>{postz.title}</td>
                             <td>
                                <Link to={`/Posts/${postz.id}`}>Detail</Link>
-                                <Link onClick={handleRemoveItem} name={postz.id} to="/posts">Remove</Link>
+                                <Link  to="/a">Remove</Link>
                             </td>
                         </tr>
                     ))}
