@@ -1,6 +1,10 @@
 import React from "react";
+import LoginPage from "../LoginPage/LoginPage";
 const LogOutPage = () =>{
-    return<div></div>
+    localStorage.clear();
+    window.sessionStorage.clear();
+    return<div>{window.location.reload()}
+    </div>
 }
 
 export default LogOutPage;

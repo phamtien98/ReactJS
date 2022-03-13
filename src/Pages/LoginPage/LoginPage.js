@@ -63,7 +63,6 @@ const LoginPage = () => {
             [evt.target.name]: true
         })
     }
-    const [open, setOpen] = React.useState(false);
     const [showResults, setShowResults] = React.useState()
     const [rememberUser, setRememberUser] = useState(false)
     const HandleOnSubmit = evt => {
@@ -78,12 +77,10 @@ const LoginPage = () => {
             window.sessionStorage.setItem("tokenArray", token.tokenArray);
             window.sessionStorage.setItem("id", token.id);
         }
-        window.location.reload();
-
+        window.location.reload()
     }
     const isFormInvalid = Boolean(error.email || error.password);
-
-    return (
+     return (
         <div className="form-login-container">
             <form className="form-login">
                 <TextField style={{ margin: '20px', display: 'block' }}
@@ -115,7 +112,7 @@ const LoginPage = () => {
                             setRememberUser(!rememberUser)
                         }} control={<Checkbox defaultChecked />} label="Remember" />
                 </FormGroup>
-                <Button onClick={HandleOnSubmit} variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
+                <Button onClick={HandleOnSubmit}  variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
                 {showResults}
             </form>
         </div>

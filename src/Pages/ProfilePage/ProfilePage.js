@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LoginPage from "../LoginPage/LoginPage";
 import './ProilePage.css'
+import { useNavigate } from "react-router-dom";
 const ProfilePage = () => {
     const [information, setInformation] = useState({
         id: '',
@@ -36,11 +37,12 @@ const ProfilePage = () => {
             })
         }
     }, []);
+    let navigate = useNavigate();
 if (window.sessionStorage.getItem("id") === null && localStorage.getItem("id") === null) {
-    return <div>
+    return (<div>
         <h5 className="text">You need to login to continue</h5>
-        <LoginPage />
-    </div>
+        <LoginPage /> 
+    </div> )
 }
 return (
     <div>
