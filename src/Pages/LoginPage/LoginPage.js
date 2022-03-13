@@ -67,6 +67,7 @@ const LoginPage = () => {
     const [rememberUser, setRememberUser] = useState(false)
     const HandleOnSubmit = evt => {
         setShowResults("Login Sucess")
+       
 
         if (rememberUser) {
             localStorage.setItem('tokenArray', token.tokenArray)
@@ -80,42 +81,45 @@ const LoginPage = () => {
         window.location.reload()
     }
     const isFormInvalid = Boolean(error.email || error.password);
-     return (
-        <div className="form-login-container">
-            <form className="form-login">
-                <TextField style={{ margin: '20px', display: 'block' }}
-                    type="text"
-                    label="Email"
-                    variant="filled"
-                    placeholder="Email"
-                    name="email"
-                    fullWidth
-                    value={value.email}
-                    onChange={HandleInputChange}
-                    onBlur={InputBlur} />
-                {touch.email && <p style={{ margin: '20px', display: 'block', color: 'red' }}>{error.email}</p>}
-                <TextField style={{ margin: '20px', display: 'block' }}
-                    type="password"
-                    fullWidth
-                    label="Password"
-                    variant="filled"
-                    placeholder="Pasword"
-                    name="password"
-                    value={value.password}
-                    onChange={HandleInputChange}
-                    onBlur={InputBlur} />
-                {touch.password && <p style={{ margin: '20px', display: 'block', color: 'red' }}>{error.password}</p>}
-                <FormGroup style={{ margin: '20px', display: 'block' }}>
-                    <FormControlLabel type="checkbox"
-                        checked={rememberUser}
-                        onChange={() => {
-                            setRememberUser(!rememberUser)
-                        }} control={<Checkbox defaultChecked />} label="Remember" />
-                </FormGroup>
-                <Button onClick={HandleOnSubmit}  variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
-                {showResults}
-            </form>
-        </div>
-    )
+    if(localStorage.getItem("id")=== null &&  window.sessionStorage.getItem("id")===null) {
+        return (
+            <div className="form-login-container">
+                <form className="form-login">
+                    <TextField style={{ margin: '20px', display: 'block' }}
+                        type="text"
+                        label="Email"
+                        variant="filled"
+                        placeholder="Email"
+                        name="email"
+                        fullWidth
+                        value={value.email}
+                        onChange={HandleInputChange}
+                        onBlur={InputBlur} />
+                    {touch.email && <p style={{ margin: '20px', display: 'block', color: 'red' }}>{error.email}</p>}
+                    <TextField style={{ margin: '20px', display: 'block' }}
+                        type="password"
+                        fullWidth
+                        label="Password"
+                        variant="filled"
+                        placeholder="Pasword"
+                        name="password"
+                        value={value.password}
+                        onChange={HandleInputChange}
+                        onBlur={InputBlur} />
+                    {touch.password && <p style={{ margin: '20px', display: 'block', color: 'red' }}>{error.password}</p>}
+                    <FormGroup style={{ margin: '20px', display: 'block' }}>
+                        <FormControlLabel type="checkbox"
+                            checked={rememberUser}
+                            onChange={() => {
+                                setRememberUser(!rememberUser)
+                            }} control={<Checkbox defaultChecked />} label="Remember" />
+                    </FormGroup>
+                    <Button onClick={HandleOnSubmit}  variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
+                    {showResults}
+                </form>
+            </div>
+        )      
+    }
+    else  return <div>login success</div>
 };
 export default LoginPage;

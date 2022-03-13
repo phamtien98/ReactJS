@@ -1,5 +1,4 @@
 import React from 'react';
-import PostPage from '../PostsPage/PostPage';
 const HomePage = () => {
   return (
     <div>

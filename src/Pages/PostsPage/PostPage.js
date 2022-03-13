@@ -1,7 +1,7 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 
 const PostPage = ()=> {
     const [post,setPost] = useState({
