@@ -1,54 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import './LoginPage.css';
+import axios from "axios";
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 const LoginPage = () => {
     const [value, setValue] = useState({
         email: '',
         password: ''
-    });
-    const database = [
-        {
-            email: "user1@abc.com",
-            password: "123456789"
-        },
-        {
-            email: "user2@abc.com",
-            password: "123456789"
-        }
-    ];
-    const [errorMessages, setErrorMessages] = useState({});
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    })
     const HandleInputChange = evt => {
         setValue({
             ...value,
             [evt.target.name]: evt.target.value
         })
-    };
-
-    const HandleOnSubmit = evt => {
-        evt.preventDefault()
-        var { uname, pass } = document.forms[0];
-
-        // Find user login info
-        const userData = database.find((user) => user.username === uname.value);
-      
-        // Compare user info
-        if (userData) {
-          if (userData.password !== pass.value) {
-            // Invalid password
-            setErrorMessages({ name: "pass" });
-          } else {
-            setIsSubmitted(true);
-          }
-        } else {
-          // Username not found
-          setErrorMessages({ name: "uname" });
-        }
-
     }
-
     const ValidateEmail = email => {
         if (!email) return 'Required';
         const IsValidateEmail = String(email)
@@ -59,34 +27,65 @@ const LoginPage = () => {
         if (!IsValidateEmail) return 'InvalidEmail';
         return '';
 
-    };
+    }
     const ValidatePasword = password => {
         if (!password) return 'Required';
-        if (password.length < 8) return 'At least 8 chars';
+        if (password.length < 8) return 'Password at least 8 chars';
         return '';
     }
-
 
     const error = {
         email: ValidateEmail(value.email),
         password: ValidatePasword(value.password)
-    };
-
+    }
+    const [token, setToken] = useState({
+        tokenArray: '',
+        id: '',
+    })
+    useEffect(() => {
+        axios({
+            method: 'GET',
+            url: `https://60dff0ba6b689e001788c858.mockapi.io/tokens`,
+        }).then(response => {
+            setToken({
+                tokenArray: response.data.token,
+                id: response.data.userId
+            })
+        })
+    }, []);
     const [touch, setTouch] = useState({
         email: false,
         password: false
-    });
+    })
     const InputBlur = evt => {
         setTouch({
             ...touch,
             [evt.target.name]: true
         })
-    };
+    }
+    const [open, setOpen] = React.useState(false);
+    const [showResults, setShowResults] = React.useState()
+    const [rememberUser, setRememberUser] = useState(false)
+    const HandleOnSubmit = evt => {
+        setShowResults("Login Sucess")
+
+        if (rememberUser) {
+            localStorage.setItem('tokenArray', token.tokenArray)
+            localStorage.setItem('id', token.id)
+        }
+        else 
+        {
+            window.sessionStorage.setItem("tokenArray", token.tokenArray);
+            window.sessionStorage.setItem("id", token.id);
+        }
+        window.location.reload();
+
+    }
     const isFormInvalid = Boolean(error.email || error.password);
-    console.log(error);
+
     return (
         <div className="form-login-container">
-            <form className="form-login" onSubmit={HandleOnSubmit}>
+            <form className="form-login">
                 <TextField style={{ margin: '20px', display: 'block' }}
                     type="text"
                     label="Email"
@@ -109,7 +108,15 @@ const LoginPage = () => {
                     onChange={HandleInputChange}
                     onBlur={InputBlur} />
                 {touch.password && <p style={{ margin: '20px', display: 'block', color: 'red' }}>{error.password}</p>}
-                <Button variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
+                <FormGroup style={{ margin: '20px', display: 'block' }}>
+                    <FormControlLabel type="checkbox"
+                        checked={rememberUser}
+                        onChange={() => {
+                            setRememberUser(!rememberUser)
+                        }} control={<Checkbox defaultChecked />} label="Remember" />
+                </FormGroup>
+                <Button onClick={HandleOnSubmit} variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
+                {showResults}
             </form>
         </div>
     )

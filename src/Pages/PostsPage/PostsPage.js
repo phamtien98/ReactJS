@@ -68,10 +68,15 @@ const PostsPage = () => {
     };
 
     const listSorted = GetPostSorted();
+  
+    const handleRemoveItem = (e) => {
+    const id  = e.target.getAttribute("name")
+    setPosts(posts.filter(m=>m.id !=id))
+    console.log(listSorted)
+}
 
     return (
         <div>
-
             <Box>
             <TextField
           type="search"
@@ -98,7 +103,7 @@ const PostsPage = () => {
                                 <TableCell align="left">{post.title}</TableCell>
                                 <TableCell align="left">
                                     <Link className="link-button" style={{backgroundColor: '#6633FF'}} to={`/Posts/${post.id}`}>Detail</Link>
-                                    <Link className="link-button" style={{backgroundColor: '#FF0000'}}  to="/a">Remove</Link>
+                                    <Link className="link-button" name={post.id} onClick={handleRemoveItem} style={{backgroundColor: '#FF0000'}}to={'/Posts'}>Remove</Link>
                                 </TableCell>
                             </TableRow>
                         ))}
