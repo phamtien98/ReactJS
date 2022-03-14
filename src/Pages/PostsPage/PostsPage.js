@@ -11,7 +11,11 @@ import Paper from '@mui/material/Paper';
 import './PostPage.css';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import SendAPIRequest from "../../CustomHook/SendAPIRequest"
+
+const responseData = response => response.data
 const PostsPage = () => {
+
     const [posts, setPosts] = useState([]);
     const [searchTitle, setSearchTitle] = useState('');
     const [sortByTitle, setSortByTitle] = useState("(NONE)");
@@ -67,22 +71,19 @@ const PostsPage = () => {
     };
 
     const listSorted = GetPostSorted();
-  
     const handleRemoveItem = (e) => {
     const id  = e.target.getAttribute("name")
     setPosts(posts.filter(m=>m.id !=id))
-    console.log(listSorted)
 }
-
     return (
         <div>
             <Box>
-            <TextField
-          type="search"
-          variant="standard"
-          placeholder="Search by post title"
-          onChange={(evt) => setSearchTitle(evt.target.value)}
-        />
+                <TextField
+                    type="search"
+                    variant="standard"
+                    placeholder="Search by post title"
+                    onChange={(evt) => setSearchTitle(evt.target.value)}
+                />
             </Box>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -95,14 +96,12 @@ const PostsPage = () => {
                     </TableHead>
                     <TableBody>
                         {listSorted.map((post) => (
-                            <TableRow
-                                key={post.id}
-                            >
+                            <TableRow key={post.id} >
                                 <TableCell component="th" scope="row">{post.id}</TableCell>
                                 <TableCell align="left">{post.title}</TableCell>
                                 <TableCell align="left">
-                                    <Link className="link-button" style={{backgroundColor: '#6633FF'}} to={`/Posts/${post.id}`}>Detail</Link>
-                                    <Link className="link-button" name={post.id} onClick={handleRemoveItem} style={{backgroundColor: '#FF0000'}}to={'/Posts'}>Remove</Link>
+                                    <Link className="link-button" style={{ backgroundColor: '#6633FF' }} to={`/Posts/${post.id}`}>Detail</Link>
+                                    <Link className="link-button" name={post.id} onClick={handleRemoveItem} style={{ backgroundColor: '#FF0000' }} to={'/Posts'}>Remove</Link>
                                 </TableCell>
                             </TableRow>
                         ))}

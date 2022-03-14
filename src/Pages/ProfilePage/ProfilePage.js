@@ -1,48 +1,35 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import LoginPage from "../LoginPage/LoginPage";
 import './ProilePage.css'
-import { useNavigate } from "react-router-dom";
-const ProfilePage = () => {
-    const [information, setInformation] = useState({
-        id: '',
-        name: '',
-        createdAt: '',
-    });
+import SendAPIRequest from "../../CustomHook/SendAPIRequest"
 
-    useEffect(() => {
-        if (window.sessionStorage.getItem("id") !== null) {
-            axios({
-                method: 'GET',
-                url: `https://60dff0ba6b689e001788c858.mockapi.io/users/${window.sessionStorage.getItem("id")}`,
-            }).then(response => {
-                setInformation({
-                    id: response.data.id,
-                    name: response.data.name,
-                    createdAt: response.data.createdAt
-                })
-                console.log(response)
-            })
-        } else {
-            axios({
-                method: 'GET',
-                url: `https://60dff0ba6b689e001788c858.mockapi.io/users/${localStorage.getItem("id")}`,
-            }).then(response => {
-                setInformation({
-                    id: response.data.id,
-                    name: response.data.name,
-                    createdAt: response.data.createdAt
-                })
-                console.log(response)
-            })
-        }
-    }, []);
-    let navigate = useNavigate();
+const responseData = response => ({
+    id: response.data.id,
+    name: response.data.name,
+    createdAt: response.data.createdAt
+})
+const initialState = {
+    id: null,
+    name: null,
+    createdAt: null,
+}
+
+const ProfilePage = () => {
+    let id = null
+    if (window.sessionStorage.getItem("id")) {
+
+        id = window.sessionStorage.getItem("id")
+    }
+    else {
+
+        id = localStorage.getItem("id")
+    }
+const { data: information, isLoading, error } = SendAPIRequest(initialState, `https://60dff0ba6b689e001788c858.mockapi.io/users/${id}`, responseData)
 if (window.sessionStorage.getItem("id") === null && localStorage.getItem("id") === null) {
     return (<div>
         <h5 className="text">You need to login to continue</h5>
-        <LoginPage /> 
-    </div> )
+        <LoginPage />
+    </div>)
 }
 return (
     <div>

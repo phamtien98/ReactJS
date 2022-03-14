@@ -2,10 +2,19 @@ import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import './LoginPage.css';
-import axios from "axios";
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import SendAPIRequest from "../../CustomHook/SendAPIRequest"
+
+const responseData = response => ({
+    tokenArray: response.data.token,
+    id: response.data.userId
+})
+const initialState = {
+    tokenArray: '',
+    id: '',
+}
 const LoginPage = () => {
     const [value, setValue] = useState({
         email: '',
@@ -38,21 +47,8 @@ const LoginPage = () => {
         email: ValidateEmail(value.email),
         password: ValidatePasword(value.password)
     }
-    const [token, setToken] = useState({
-        tokenArray: '',
-        id: '',
-    })
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `https://60dff0ba6b689e001788c858.mockapi.io/tokens`,
-        }).then(response => {
-            setToken({
-                tokenArray: response.data.token,
-                id: response.data.userId
-            })
-        })
-    }, []);
+    const { data: token, isLoading, errors } = SendAPIRequest(initialState, `https://60dff0ba6b689e001788c858.mockapi.io/tokens`, responseData)
+
     const [touch, setTouch] = useState({
         email: false,
         password: false
@@ -66,22 +62,20 @@ const LoginPage = () => {
     const [showResults, setShowResults] = React.useState()
     const [rememberUser, setRememberUser] = useState(false)
     const HandleOnSubmit = evt => {
+        evt.preventDefault();
         setShowResults("Login Sucess")
-       
-
         if (rememberUser) {
             localStorage.setItem('tokenArray', token.tokenArray)
             localStorage.setItem('id', token.id)
         }
-        else 
-        {
+        else {
             window.sessionStorage.setItem("tokenArray", token.tokenArray);
             window.sessionStorage.setItem("id", token.id);
         }
         window.location.reload()
     }
     const isFormInvalid = Boolean(error.email || error.password);
-    if(localStorage.getItem("id")=== null &&  window.sessionStorage.getItem("id")===null) {
+    if (localStorage.getItem("id") === null && window.sessionStorage.getItem("id") === null) {
         return (
             <div className="form-login-container">
                 <form className="form-login">
@@ -114,12 +108,12 @@ const LoginPage = () => {
                                 setRememberUser(!rememberUser)
                             }} control={<Checkbox defaultChecked />} label="Remember" />
                     </FormGroup>
-                    <Button onClick={HandleOnSubmit}  variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
+                    <Button onClick={HandleOnSubmit} variant="contained" disabled={isFormInvalid} style={{ margin: '20px', display: 'block' }}>Submit</Button>
                     {showResults}
                 </form>
             </div>
-        )      
+        )
     }
-    else  return <div>login success</div>
+    else return <div>login success</div>
 };
 export default LoginPage;

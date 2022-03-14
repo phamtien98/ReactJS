@@ -1,30 +1,25 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {useParams } from "react-router-dom";
-
-const PostPage = ()=> {
-    const [post,setPost] = useState({
-        id:null,
-        title:null,
-        body:null
+import { useParams } from "react-router-dom";
+import SendAPIRequest from "../../CustomHook/SendAPIRequest"
+const responseData = response => ({
+    id: response.data.id,
+    title: response.data.title,
+    body: response.data.body
+})
+const initialState = {
+    id: null,
+    title: null,
+    body: null
+}
+const PostPage = () => {
+    const readParams = useParams(() => {
+        return readParams.id;
     });
-const readParams = useParams(()=>{
-    return readParams.id;
-});
-    useEffect(()=>{
-        axios({
-            method: 'GET',
-            url: `https://jsonplaceholder.typicode.com/posts/${readParams.id}`,
-        }).then(response=>{
-            setPost({
-                id: response.data.id,
-                title:response.data.title,
-                body:response.data.body
-            })
-        })
-    },[]);
-    return(
+
+    const {data:post, isLoading, error} = SendAPIRequest(initialState, `https://jsonplaceholder.typicode.com/posts/${readParams.id}`, responseData)
+    return (
         <div>
             <p>Id: {post.id}</p>
             <p>Title: {post.title}</p>
